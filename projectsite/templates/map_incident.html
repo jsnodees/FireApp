@@ -1,5 +1,7 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 
 <div class="page-inner">
     <div class="page-header">
@@ -41,9 +43,10 @@
     </div>
 </div>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 <script>
     var map = L.map('map').setView([9.81644, 118.72239], 13);
-    var truckIcon = L.icon({
+    var fireIcon = L.icon({
     iconUrl: '../static/img/fire.png', // Replace with the path to your red marker icon
     iconSize: [50, 50], // Adjust the size as needed
     });
@@ -51,32 +54,48 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>contributors'}).addTo(map);
 
         // Create an array to hold all the markers
-        var markers = [];
+        var markers = L.markerClusterGroup();
 
         // Define the marker data
-        var markerData = {{ fireIncidents|safe }};
+        var markerData = {{ incidentData|safe }};
 
         // Loop through the marker data and create markers
-        markerData.forEach(function (data) {
-        var latitude = parseFloat(data.latitude);
-        var longitude = parseFloat(data.longitude);
-        var marker = L.marker([latitude, longitude], { icon: truckIcon }).addTo(map);
+        function updateMarkers(city) {
+            markers.clearLayers();
+
+            markerData.forEach(function (data) {
+                if (city === 'all' || data.city === city) {
+                    var latitude = parseFloat(data.latitude);
+                    var longitude = parseFloat(data.longitude);
+
+                    var marker = L.marker([latitude, longitude], { icon: fireIcon });
+
 
         // Create a popup and set its content
-        var popupContent = data.name;
-        var popup = L.popup().setContent(popupContent);
-        marker.bindPopup(popupContent);
+                    var popupContent = '<strong>' + data.description + '</strong><br>' +
+                           'Severity: ' + data.severity_level + '<br>' +
+                           'Date/Time: ' + data.date_time + '<br>' +
+                           data.address + '<br>' +
+                           data.city;
+
+                    marker.bindPopup(popupContent);
 
         // Bind mouseover and mouseout events to the marker
-        marker.on('mouseover', function (e) {
-        this.openPopup();
-        });
-        marker.on('mouseout', function (e) {
-        this.closePopup();
-        });
+                    marker.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                    marker.on('mouseout', function (e) {
+                        this.closePopup();
+                    });
 
         // Add the marker to the markers array
-        markers.push(marker);
-    });
+                    markers.addLayer(marker);
+                }
+            });
+
+            map.addLayer(markers);
+        }
+        updateMarkers('all');
+
 </script>
 {% endblock %}
