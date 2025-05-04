@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from fire.forms import IncidentForm
+from fire.forms import IncidentForm, LocationsForm
+from django.db.models import Q
 from fire.models import Locations, Incident, FireStation
 from django.urls import reverse_lazy
 from django.db import connection
@@ -225,15 +226,47 @@ class IncidentCreateView(CreateView):
     model = Incident
     form_class = IncidentForm
     template_name = 'incident_add.html'
-    success_url = reverse_lazy('organization-list')
+    success_url = reverse_lazy('incident-list')
 
 class IncidentUpdateView(UpdateView):
     model = Incident
     form_class = IncidentForm
     template_name = 'incident_edit.html'
-    success_url = reverse_lazy('organization-list')
+    success_url = reverse_lazy('incident-list')
 
 class IncidentDeleteView(DeleteView):
     model = Incident
     template_name = 'incident_del.html'
-    success_url = reverse_lazy('organization-list')
+    success_url = reverse_lazy('incident-list')
+
+
+class LocationsList(ListView):
+    model = Locations
+    context_object_name = 'locations'
+    template_name = 'location_list.html'
+    paginate_by = 5
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(LocationsList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") != None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(name__icontains=query) |
+                        Q(description__icontains=query))
+        return qs
+    
+class LocationsCreateView(CreateView):
+    model = Locations
+    form_class = LocationsForm
+    template_name = 'location_add.html'
+    success_url = reverse_lazy('location-list')
+
+class LocationsUpdateView(UpdateView):
+    model = Locations
+    form_class = LocationsForm
+    template_name = 'location_edit.html'
+    success_url = reverse_lazy('location-list')
+
+class LocationsDeleteView(DeleteView):
+    model = Locations
+    template_name = 'location_del.html'
+    success_url = reverse_lazy('location-list')

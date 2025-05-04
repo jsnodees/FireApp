@@ -19,6 +19,9 @@ class Locations(BaseModel):
     city = models.CharField(max_length=150)  # can be in separate table
     country = models.CharField(max_length=150)  # can be in separate table
 
+    def __str__(self):
+	    return self.name
+
 
 class Incident(BaseModel):
     SEVERITY_CHOICES = (
@@ -31,8 +34,6 @@ class Incident(BaseModel):
     severity_level = models.CharField(max_length=45, choices=SEVERITY_CHOICES)
     description = models.CharField(max_length=250)
 
-    def __str__(self):
-	    return self.location
 
 
 class FireStation(BaseModel):
