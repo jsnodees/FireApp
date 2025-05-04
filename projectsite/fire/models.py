@@ -31,6 +31,9 @@ class Incident(BaseModel):
     severity_level = models.CharField(max_length=45, choices=SEVERITY_CHOICES)
     description = models.CharField(max_length=250)
 
+    def __str__(self):
+	    return self.location
+
 
 class FireStation(BaseModel):
     name = models.CharField(max_length=150)
