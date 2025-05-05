@@ -288,7 +288,7 @@ class FireStationList(ListView):
 class FireStationCreateView(CreateView):
     model = FireStation
     form_class = FireStationForm
-    template_name = 'fire_station.add.html'
+    template_name = 'fire_station_add.html'
     success_url = reverse_lazy('firestation-list')
 
 class FireStationUpdateView(UpdateView):
