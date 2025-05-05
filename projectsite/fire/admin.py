@@ -8,3 +8,4 @@ admin.site.register(Firefighters)
 admin.site.register(FireStation)
 admin.site.register(FireTruck)
 admin.site.register(WeatherConditions)
+
