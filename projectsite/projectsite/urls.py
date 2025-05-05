@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 
 from fire.views import HomePageView, ChartView, PieCountbySeverity, LineCountbyMonth, MultilineIncidentTop3Country, multipleBarbySeverity, IncidentList, IncidentCreateView, IncidentUpdateView, IncidentDeleteView, LocationsList, LocationsCreateView, LocationsUpdateView, LocationsDeleteView, FireStationList, FireStationCreateView, FireStationUpdateView, FireStationDeleteView, FireFighterList, FireFighterUpdateView, FireFighterCreateView, FireFighterDeleteView
-from fire.views import FireTruckList, FireTruckCreateView, FireTruckUpdateView, FireTruckDeleteView
+from fire.views import FireTruckList, FireTruckCreateView, FireTruckUpdateView, FireTruckDeleteView, WeatherConList, WeatherConCreateView, WeatherConUpdateView, WeatherConDeleteView
 from fire import views
 
 urlpatterns = [
@@ -35,4 +35,8 @@ urlpatterns = [
     path('firetruck_list/add', FireTruckCreateView.as_view(), name='firetruck-add'),
     path('firetruck_list/<pk>', FireTruckUpdateView.as_view(), name='firetruck-update'),
     path('firetruck_list/<pk>/delete', FireTruckDeleteView.as_view(), name='firetruck-delete'),
+    path('weathercon_list', WeatherConList.as_view(), name='weathercon-list'),
+    path('weathercon_list/add', WeatherConCreateView.as_view(), name='weathercon-add'),
+    path('weathercon_list/<pk>', WeatherConUpdateView.as_view(), name='weathercon-update'),
+    path('weathercon_list/<pk>/delete', WeatherConDeleteView.as_view(), name='weathercon-delete'),
 ]
