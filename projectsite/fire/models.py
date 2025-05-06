@@ -66,8 +66,6 @@ class Firefighters(BaseModel):
     station = models.CharField(
         max_length=45, null=True, blank=True, choices=XP_CHOICES)
     
-
-
 class FireTruck(BaseModel):
     truck_number = models.CharField(max_length=150)
     model = models.CharField(max_length=150)
@@ -81,3 +79,9 @@ class WeatherConditions(BaseModel):
     humidity = models.DecimalField(max_digits=10, decimal_places=2)
     wind_speed = models.DecimalField(max_digits=10, decimal_places=2)
     weather_description = models.CharField(max_length=150)
+
+class Boat(models.Model):
+    boat_name = models.CharField(max_length=150)
+    length = models.DecimalField(max_digits=10, decimal_places=2)
+    width = models.DecimalField(max_digits=10, decimal_places=2)
+    height = models.DecimalField(max_digits=10, decimal_places=2)
